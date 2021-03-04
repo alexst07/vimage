@@ -9,16 +9,18 @@ else()
   message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
 
+find_package( OpenCV REQUIRED)
 find_package(PNG REQUIRED)
 
 include_directories(${BASE_IMG_LIB}/include/)
 include_directories(${CMAKE_SOURCE_DIR}/include/)
+include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 file(GLOB LIB_SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cc)
 
 add_library(volimg SHARED ${LIB_SRC_FILES})
 
 message("png lib: ${PNG_LIBRARIES}")
-target_link_libraries (volimg LINK_PUBLIC ${PNG_LIBRARIES})
+target_link_libraries (volimg LINK_PUBLIC ${OpenCV_LIBS} ${PNG_LIBRARIES})
 
 add_subdirectory(tests/)

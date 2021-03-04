@@ -17,11 +17,12 @@ class Matrix {
 
   Matrix(std::initializer_list<std::initializer_list<T>>&& list) {
     ncols_ = list.size();
-    nrows_ = list[0].size();
+    auto it = list.begin();
+    nrows_ = it->size();
     mat_.reserve(ncols_*nrows_);
 
     for (auto& line : list) {
-      for (T& e : line) {
+      for (const T& e : line) {
         mat_.push_back(e);
       }
     }
@@ -66,11 +67,23 @@ class Matrix {
   }
 
   void operator()(T value, size_t i, size_t j) {
-    mat_[j*ncols_ + i] = value;
+    mat_[i*ncols_ + j] = value;
   }
 
-  const T& operator()(ssize_t i, size_t j) const {
-    return mat_[j*ncols_ + i];
+  const T& operator()(size_t i, size_t j) const {
+    return mat_[i*ncols_ + j];
+  }
+
+  T& operator()(size_t i, size_t j) {
+    return mat_[i*ncols_ + j];
+  }
+
+  size_t ncols() const {
+    return ncols_;
+  }
+
+  size_t nrows() const {
+    return nrows_;
   }
 
  private:
@@ -78,5 +91,24 @@ class Matrix {
   size_t ncols_;
   size_t nrows_;
 };
+
+template<class T>
+Matrix<T> MultMatrices(const Matrix<T>& a, const Matrix<T>& b) {
+  size_t m1 = a.nrows();
+  size_t m2 = a.ncols();
+  size_t n1 = b.nrows();
+  size_t n2 = b.ncols();
+
+  Matrix<T> res = Matrix<T>(m1, n2);
+  for (size_t i = 0; i < m1; i++) {
+    for (size_t j = 0; j < n2; j++) {
+      res(i, j)= 0;
+      for (size_t x = 0; x < m2; x++) {
+        T v = a(i, j)*b(x, j);
+        res(v, i, j);
+      }
+    }
+  }
+}
 
 }

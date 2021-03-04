@@ -125,6 +125,8 @@ class ImgVol {
 
   void WriteImg(std::string file_name);
 
+  uint8_t Imax();
+
   friend std::ostream& operator<<(std::ostream& stream,
                                   ImgVol& img);
 

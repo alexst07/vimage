@@ -244,6 +244,16 @@ size_t ImgVol::SizeZ() const noexcept {
   return zsize_;
 }
 
+uint8_t ImgVol::Imax() {
+  uint8_t max = 0;
+
+  for (auto& e : img_) {
+    if (e > max) max = e;
+  }
+
+  return max;
+}
+
 std::ostream& operator<<(std::ostream& stream,
                          ImgVol& img) {
   stream << "Img sizes[X: "<< img.SizeX() << ", Y: " << img.SizeY()
